@@ -7,26 +7,25 @@
 
 //using namespace std;
 
-datastore d;
+DataStore d;
 
 QuizDesignerLatest::QuizDesignerLatest(QWidget *parent)
     : QWidget(parent)
 {
-    ui.setupUi(this);
+    ui.setupUi(this); // create instances of Qt widgets
 }
 
 QuizDesignerLatest::~QuizDesignerLatest()
 {}
 
-int i = 0;
+int i = 0; // counter to keep track of number of generated questions
 void QuizDesignerLatest::on_questButton_clicked() {
-    AddQuestDialog dialog(this);
+    AddQuestDialog dialog(this); // instance of AddQuestDialog
     i++;
     std::cout << "i = " << i << endl;
     if (dialog.exec()) {
    
         // Radio button handling (i.e true/false, mult choice, fill blank)
-
         bool check_TF = dialog.trueFalseButton->isChecked(); // bool = 1 if button is checked off
         bool check_MC = dialog.multChoiceButton->isChecked(); // bool = 1 if button is checked off
         bool check_FB = dialog.fillBlankButton->isChecked(); // bool = 1 if button is checked off
@@ -67,7 +66,7 @@ void QuizDesignerLatest::on_questButton_clicked() {
     }
 }
 
-void QuizDesignerLatest::on_qlistWidget_currentItemChanged() {
+void QuizDesignerLatest::on_qlistWidget_currentItemChanged() { // displays either the currently selected question at the bottom of the dialog box, or <No question selected>
     QListWidgetItem* curItem = ui.qlistWidget->currentItem();
 
     if (curItem) {
@@ -78,7 +77,7 @@ void QuizDesignerLatest::on_qlistWidget_currentItemChanged() {
     }
 }
 
-void QuizDesignerLatest::on_deleteButton_clicked() {
+void QuizDesignerLatest::on_deleteButton_clicked() { // deletes the currently selected list item when user clicks Delete button
     QListWidgetItem* curItem = ui.qlistWidget->currentItem();
 
     if (curItem) {

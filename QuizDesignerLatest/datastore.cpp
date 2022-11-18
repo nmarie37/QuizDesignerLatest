@@ -5,45 +5,45 @@
 using namespace std;
 
 
-datastore::datastore() {
+DataStore::DataStore() { // initialize int and string member variables. Vector size will change dynamically as more questions are added by user
 	int numques = 0;
 	string title = "";
 	vector<string> questions;
 	vector<string> types;
 }
 
-datastore::~datastore() {};
+DataStore::~DataStore() {};
 
-string datastore::getTitle() {
+string DataStore::getTitle() {
 	return title;
 }
 
-void datastore::setTitle(string title_s) {
+void DataStore::setTitle(string title_s) {
 	title = title_s;
 	//quizzes.assign(i, name);
 }
 
-void datastore::setQuestion(string quest) {
+void DataStore::setQuestion(string quest) { // push question into vector
 	questions.push_back(quest);
 }
 
-string datastore::getQuestion(int i) {
+string DataStore::getQuestion(int i) {  // get question at index i
 	return questions[i];
 }
 
-void datastore::setType(string type) {
+void DataStore::setType(string type) { // push type into vector
 	types.push_back(type);
 }
-string datastore::getType(int i) {
+string DataStore::getType(int i) {  // get question type at index i
 	return types[i];
 }
 
-void datastore::printTypes() {
+void DataStore::printTypes() { // loop through all question types and print
 	for (int i = 0; i < types.size(); i++) {
 		std::cout << types[i] << endl;
 	}
 }
-void datastore::printQues() {
+void DataStore::printQues() { // loop through all questions and print
 	for (int i = 0; i < questions.size(); i++) {
 		std::cout << questions[i] << endl;
 	}

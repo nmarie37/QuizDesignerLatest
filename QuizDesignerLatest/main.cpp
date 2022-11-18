@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-extern datastore d;
+extern DataStore d;
 
 int main(int argc, char *argv[])
 {
@@ -20,18 +20,17 @@ int main(int argc, char *argv[])
     msgBox.setStandardButtons(QMessageBox::Cancel);  // create cancel button to exit the program
     int ret = msgBox.exec();
 
-    if (msgBox.clickedButton() == newButton) {
+    if (msgBox.clickedButton() == newButton) { // if user clicks New, execute QuizDesignerLatest code (Main UI, dialogs...)
         w.show();
     }
-    else if (msgBox.clickedButton() == openButton) {
+    else if (msgBox.clickedButton() == openButton) { // if user clicks Open, open existing Quiz Designer .csv file for editing
 
     }
-    else if (ret == QMessageBox::Cancel) {
+    else if (ret == QMessageBox::Cancel) { // if user clicks Cancel, close the message box and end the program, returning 0
         msgBox.close();
         return 0;
     }
 
     
-
     return a.exec();
 }
