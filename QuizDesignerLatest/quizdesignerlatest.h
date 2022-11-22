@@ -18,4 +18,6 @@ private slots: // slot naming convention: void on<object_name>_<signal_name>(<si
     void on_questButton_clicked(); // Add Question button slot
     void on_qlistWidget_currentItemChanged(); // List displayed of current quizzes slot
     void on_deleteButton_clicked(); // Delete Quiz slot
+
+
 };

@@ -48,3 +48,10 @@ void DataStore::printQues() { // loop through all questions and print
 		std::cout << questions[i] << endl;
 	}
 }
+
+int DataStore::getNumQues() {
+	return numques;
+}
+void DataStore::setNumQues(int n) {
+	numques = n;
+}

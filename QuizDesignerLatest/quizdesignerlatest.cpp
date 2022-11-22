@@ -5,7 +5,9 @@
 
 #include <iostream>
 
-//using namespace std;
+using namespace std;
+
+#define MAXQUES 15
 
 DataStore d;
 
@@ -18,13 +20,12 @@ QuizDesignerLatest::QuizDesignerLatest(QWidget *parent)
 QuizDesignerLatest::~QuizDesignerLatest()
 {}
 
-int i = 0; // counter to keep track of number of generated questions
+static int i = 0; // counter to keep track of number of generated questions; static to retain value outsode of function scope
 void QuizDesignerLatest::on_questButton_clicked() {
     AddQuestDialog dialog(this); // instance of AddQuestDialog
-    i++;
-    std::cout << "i = " << i << endl;
+
+    std::cout << "i = " << d.getNumQues() << endl;
     if (dialog.exec()) {
-   
         // Radio button handling (i.e true/false, mult choice, fill blank)
         bool check_TF = dialog.trueFalseButton->isChecked(); // bool = 1 if button is checked off
         bool check_MC = dialog.multChoiceButton->isChecked(); // bool = 1 if button is checked off
@@ -54,12 +55,29 @@ void QuizDesignerLatest::on_questButton_clicked() {
             d.setType(selectf_s);
         }
 
+        QString ques = dialog.quesLineEdit->text(); // grabs question entered into dialog box
+
+        bool en = dialog.saveButton->isEnabled(); // en = 1 when save button is clicked, 0 otherwise
+        // only increment store total # of questions # when all of these conditions are met before clicking save
+        if ((en == 1) && (!ques.isEmpty()) && ((check_TF) || (check_MC) || (check_FB))) {
+            cout << "en = " << en << endl;
+            int totalQues = ui.spinBox->value(); // get user-configured total number of questions (1-15)
+            if ((i < totalQues) && (i < MAXQUES)) {
+                i++;
+            }           
+        }
+        d.setNumQues(i); // store current number of questions into DataStore object
+
         d.printTypes();
         d.printQues();
 
-        QString ques = dialog.quesLineEdit->text();
         if (!ques.isEmpty()) {
             QListWidgetItem* item = new QListWidgetItem("Question: " + ques, ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+            item->setData(Qt::UserRole, ques);
+            ui.qlistWidget->setCurrentItem(item);
+        }
+        else { // otherwise, add empty item to list
+            QListWidgetItem* item = new QListWidgetItem(" ", ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
             item->setData(Qt::UserRole, ques);
             ui.qlistWidget->setCurrentItem(item);
         }
@@ -78,6 +96,10 @@ void QuizDesignerLatest::on_qlistWidget_currentItemChanged() { // displays eithe
 }
 
 void QuizDesignerLatest::on_deleteButton_clicked() { // deletes the currently selected list item when user clicks Delete button
+    if (i >= 1) { // if at least one question exists, decrement question counter by one
+        i--;
+    }
+
     QListWidgetItem* curItem = ui.qlistWidget->currentItem();
 
     if (curItem) {

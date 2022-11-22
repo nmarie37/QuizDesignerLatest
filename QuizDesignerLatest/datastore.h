@@ -21,6 +21,8 @@ public:
 	string getQuestion(int i); // get question at index i
 	void setType(string quest); // set question type for specified question
 	string getType(int i); // get question type for question at index i
+	int getNumQues();
+	void setNumQues(int n);
 	void printTypes(); // print question types
 	void printQues(); // print questions
 
