@@ -15,9 +15,8 @@ private:
     Ui::QuizDesignerLatestClass ui; // instance inherited from Qt namespace Ui
 
 private slots: // slot naming convention: void on<object_name>_<signal_name>(<signal parameters>)
+    void on_exportButton_clicked(); //Export quiz to csv file
     void on_questButton_clicked(); // Add Question button slot
     void on_qlistWidget_currentItemChanged(); // List displayed of current quizzes slot
     void on_deleteButton_clicked(); // Delete Quiz slot
-
-
 };

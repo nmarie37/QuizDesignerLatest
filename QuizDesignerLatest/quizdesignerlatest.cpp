@@ -21,6 +21,25 @@ QuizDesignerLatest::~QuizDesignerLatest()
 {}
 
 static int i = 0; // counter to keep track of number of generated questions; static to retain value outsode of function scope
+
+void QuizDesignerLatest::on_exportButton_clicked() {
+    QString quizName = ui.titleEdit->text();
+    string qName = quizName.toLocal8Bit().constData();
+
+    QFile file(quizName + ".csv");
+    if (!file.open(QIODevice::WriteOnly)) {
+        qCritical() << file.errorString();
+    }
+
+    for (int i = 0; i < d.getNumQues(); i++) {
+        QTextStream stream(&file);
+        stream << ui.qlistWidget->item(i)->text() << Qt::endl;
+    }
+
+    file.flush();
+    file.close();
+}
+
 void QuizDesignerLatest::on_questButton_clicked() {
     AddQuestDialog dialog(this); // instance of AddQuestDialog
 
