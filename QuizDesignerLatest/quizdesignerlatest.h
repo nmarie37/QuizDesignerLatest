@@ -10,6 +10,7 @@ class QuizDesignerLatest : public QWidget // this class creates a Qt widget wind
 public:
     QuizDesignerLatest(QWidget *parent = nullptr); // customized constructor to work with Qt
     ~QuizDesignerLatest(); // destructor
+    void loadQuiz(); //opens the Quiz Designer .csv file for editing
 
 private:
     Ui::QuizDesignerLatestClass ui; // instance inherited from Qt namespace Ui

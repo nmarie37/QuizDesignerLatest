@@ -22,9 +22,33 @@ QuizDesignerLatest::~QuizDesignerLatest()
 
 static int i = 0; // counter to keep track of number of generated questions; static to retain value outsode of function scope
 
+void QuizDesignerLatest::loadQuiz() {
+    QString filename = QFileDialog::getOpenFileName(this, "Select a File");
+    ui.titleEdit->setText(filename);
+
+    QFile file(filename);
+    if (!file.exists()) {
+        qCritical() << "File not found";
+    }
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        qCritical() << file.errorString();
+    }
+
+    QTextStream stream(&file);
+
+    int i = 0;
+    while (!stream.atEnd()) {
+        QString line = stream.readLine();
+        ui.qlistWidget->addItem(line);
+        i++;
+    }
+
+    file.close();
+}
+
 void QuizDesignerLatest::on_exportButton_clicked() {
     QString quizName = ui.titleEdit->text();
-    string qName = quizName.toLocal8Bit().constData();
 
     QFile file(quizName + ".csv");
     if (!file.open(QIODevice::WriteOnly)) {

@@ -24,7 +24,8 @@ int main(int argc, char *argv[])
         w.show();
     }
     else if (msgBox.clickedButton() == openButton) { // if user clicks Open, open existing Quiz Designer .csv file for editing
-
+        w.loadQuiz();
+        w.show();
     }
     else if (ret == QMessageBox::Cancel) { // if user clicks Cancel, close the message box and end the program, returning 0
         msgBox.close();
