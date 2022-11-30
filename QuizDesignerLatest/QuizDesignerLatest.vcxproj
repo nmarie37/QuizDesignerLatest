@@ -97,15 +97,18 @@
   <ItemGroup>
     <QtRcc Include="quizdesignerlatest.qrc" />
     <QtUic Include="addquestdialog.ui" />
+    <QtUic Include="multchoicedialog.ui" />
     <QtUic Include="quizdesignerlatest.ui" />
     <QtMoc Include="quizdesignerlatest.h" />
     <ClCompile Include="addquestdialog.cpp" />
+    <ClCompile Include="multchoicedialog.cpp" />
     <ClCompile Include="quizdesignerlatest.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="QuizDesignerLatest.ico" />
     <ResourceCompile Include="QuizDesignerLatest.rc" />
     <QtMoc Include="addquestdialog.h" />
     <ClInclude Include="datastore.h" />
+    <QtMoc Include="multchoicedialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="datastore.cpp" />
     <ClCompile Include="stdafx.cpp">
