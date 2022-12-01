@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include <filesystem>
+#include <string>
+#include <ctype.h>
 #include "quizdesignerlatest.h"
 #include "addquestdialog.h"
 #include "multchoicedialog.h"
@@ -26,12 +28,25 @@ static int i = 0; // counter to keep track of number of generated questions; sta
 static int ans_i = 0;
 
 void QuizDesignerLatest::loadQuiz() {
+    cout << "message clicked in load quiz: " << d.getMsgClicked() << endl;
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
-    QString filename = dialog.getOpenFileName(this, "Select a File", ("(*.csv)"));
-    ui.titleEdit->setText(filename);
+    QString filename = dialog.getOpenFileName(this, "Select a File");
+    string filename_s = filename.toLocal8Bit().constData();
+    //ui.titleEdit->setText(filename);
 
     QFile file(filename);
+    ifstream f;
+    f.open(filename_s, ios::in);
+    if (f.is_open()) {
+        std::cout << "File is open and ready \n";
+    }
+    else {
+        std::cout << "File not found! \n";
+        return;
+    }
+        
+
     if (!file.exists()) {
         qCritical() << "File not found";
     }
@@ -40,7 +55,12 @@ void QuizDesignerLatest::loadQuiz() {
         qCritical() << file.errorString();
     }
 
-    QTextStream stream(&file);
+    
+    d.fileRead(d, f);
+
+
+
+        /*QTextStream stream(&file);
 
     int i = 0;
     while (!stream.atEnd()) {
@@ -49,11 +69,12 @@ void QuizDesignerLatest::loadQuiz() {
         i++;
     }
 
-    file.close();
+    file.close();*/
 }
 
 void QuizDesignerLatest::on_exportButton_clicked() {
-    d.fileWrite(d, d.getTypes(), d.getQues());
+    //d.fileWrite(d, d.getTypes(), d.getQues());
+    d.fileWrite(d);
     //QString quizName = ui.titleEdit->text();
 
     //QFile file(quizName + ".csv");
@@ -87,6 +108,7 @@ void QuizDesignerLatest::multChoiceAnswers() {
 }
 
 void QuizDesignerLatest::on_questButton_clicked() {
+    cout << "message clicked in new quiz: " << d.getMsgClicked() << endl;
     AddQuestDialog dialog(this); // instance of AddQuestDialog
 
     QString title = ui.titleEdit->text();

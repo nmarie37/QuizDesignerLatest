@@ -21,9 +21,11 @@ int main(int argc, char *argv[])
     int ret = msgBox.exec();
 
     if (msgBox.clickedButton() == newButton) { // if user clicks New, execute QuizDesignerLatest code (Main UI, dialogs...)
+        d.setMsgClicked(0);
         w.show();
     }
     else if (msgBox.clickedButton() == openButton) { // if user clicks Open, open existing Quiz Designer .csv file for editing
+        d.setMsgClicked(1);
         w.loadQuiz();
         w.show();
     }

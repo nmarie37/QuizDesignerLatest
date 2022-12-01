@@ -16,6 +16,7 @@ DataStore::DataStore() { // initialize int and string member variables. Vector s
 	vector<string> types;
 	vector<vector<string>> mult_ans;
 	vector<int> ans_idx;
+	int msg_clicked;
 }
 
 DataStore::~DataStore() {}
@@ -94,6 +95,13 @@ vector<int> DataStore::getAnsIdx() {
 	return ans_idx;
 }
 
+void DataStore::setMsgClicked(int i) {
+	msg_clicked = i;
+}
+int DataStore::getMsgClicked() {
+	return msg_clicked;
+}
+
 void DataStore::pairSort(vector<string>& q, vector<string>& t) {
 	pair<string, string> pairs[MAXQUES];
 
@@ -126,7 +134,101 @@ void DataStore::pairSortInt(vector<string>& q, vector<int>& t) {
 	}
 }
 
-void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> quest) {
+void DataStore::fileRead(DataStore d, ifstream& f) {
+	string lineBuf;
+	string title;
+	string course;
+	int i = 0;
+	vector<string> store_temp;
+	while (f) {
+		getline(f, title);
+		d.setTitle(title);
+		getline(f, lineBuf);
+
+		for (int i = 0; i < 5; i++) {
+			getline(f, lineBuf);
+		}
+
+		while (f) {
+			getline(f, lineBuf);
+			store_temp.push_back(lineBuf);
+		}
+	}
+
+	for (int i = 0; i < store_temp.size(); i++) {
+		std::cout << store_temp[i] << endl;
+	}
+
+	int max_cur = 0;
+	int max_new = 0;
+	string store_temp_s;
+	vector<string> answers;
+	vector<string> store_temp_ans = store_temp;
+	vector<string> store_temp_copy = store_temp;
+	for (int i = 0; i < store_temp.size(); i++) {
+		std::cout << "max_cur: " << max_cur << endl;
+		if (i == 1) {
+			d.setType(store_temp[i - 1]);
+			if (store_temp[i - 1] == "Multiple Choice(Single Answer):") {
+				answers.push_back(store_temp_ans[i + 1].erase(0,3));
+				answers.push_back(store_temp_ans[i + 2].erase(0,3));
+				answers.push_back(store_temp_ans[i + 3].erase(0,3));
+				answers.push_back(store_temp_ans[i + 4].erase(0,3));
+				setMultAns(answers, 1);
+				answers.clear();
+			}
+			d.setQuestion(store_temp_copy[i].erase(0, 3));
+			store_temp_s = store_temp[i];
+			max_cur = store_temp_s[0] - '0';
+			std::cout << "inside if (i == 1)" << endl;
+			continue;
+		}
+		else if (isdigit(store_temp[i][0])) {
+			d.setType(store_temp[i - 1]);
+			if (store_temp[i - 1] == "Multiple Choice(Single Answer):") {
+				answers.push_back(store_temp_ans[i + 1].erase(0,3));
+				answers.push_back(store_temp_ans[i + 2].erase(0,3));
+				answers.push_back(store_temp_ans[i + 3].erase(0,3));
+				answers.push_back(store_temp_ans[i + 4].erase(0,3));
+				std::cout << "answers[0] = " << answers[0] << endl;
+				setMultAns(answers, 1);
+				answers.clear();
+			}
+			d.setQuestion(store_temp_copy[i].erase(0, 3));
+			store_temp_s = store_temp[i];
+			max_new = store_temp_s[0] - '0';
+			std::cout << "inside else if " << endl;
+			if (max_new > max_cur) {
+				max_cur = max_new;
+				std::cout << "inside else if if" << endl;
+			}
+		}
+	}
+
+	std::cout << "store_temp[0] = " << store_temp[0] << endl; // this should be the first question type
+	for (int i = 0; i < d.getTypes().size(); i++) {
+		std::cout << "Question " << i << ": " << d.getQues()[i] << endl;
+	}
+	
+	std::cout << "store_temp_copy: " << endl;
+	for (int i = 0; i < store_temp_copy.size(); i++) {
+		std::cout<<store_temp_copy[i] << endl;
+	}
+
+	std::cout << "Mult choice answers: " << endl;
+	for (int i = 0; i < d.getMultAns().size(); i++) {
+		for (int j = 0; j < 3; j++) {
+			std::cout << d.getMultAns()[i][j] << endl;
+		}
+		
+	}
+
+	d.setNumQues(max_cur);
+	d.setTitle(title);
+}
+
+//void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> quest) {
+void DataStore::fileWrite(DataStore d) {
 	//std::filesystem::path cwd = std::filesystem::current_path() / "filename.txt";
 	//string filename = d.getTitle() + "_" + d.getTime() + ".csv";
 	std::cout << "contents of d.getMultAns(): " << endl;
@@ -156,7 +258,7 @@ void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> ques
 			file << "\n";
 			file << types[i] << ": " << endl;
 			file << q << ". ";
-			file << quest[i] << endl;
+			file << questions[i] << endl;
 			
 			if (types[i] == "True/False") {
 				file << "True:___" << endl;
@@ -182,7 +284,7 @@ void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> ques
 			file << "\n";
 			if (types[i] == types[i - 1]) {
 				file << q << ". ";
-				file << quest[i] << endl;
+				file << questions[i] << endl;
 				if (types[i] == "True/False") {
 					file << "True:___" << endl;
 					file << "False:___\n" << endl;
@@ -204,7 +306,7 @@ void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> ques
 			else {
 				file << types[i] << ": " << endl;
 				file << q << ". ";
-				file << quest[i] << endl;
+				file << questions[i] << endl;
 				if (types[i] == "True/False") {
 					file << "True:___" << endl;
 					file << "False:___\n" << endl;
