@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/QuizDesignerLatest/Quiz1.csv
+/QuizDesignerLatest/Quiz1_edited.csv
+/QuizDesignerLatest/Quiz3.csv
