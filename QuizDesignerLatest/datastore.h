@@ -45,7 +45,7 @@ public:
 	void pairSortInt(vector<string>& q, vector<int>& t);
 	//void fileWrite(DataStore d, vector<string> types, vector<string> quest);
 	void fileWrite(DataStore d);
-	void fileRead(DataStore d, ifstream& f);
+	void fileRead(DataStore& d, ifstream& f);
 
 	void setMsgClicked(int i);
 	int getMsgClicked();

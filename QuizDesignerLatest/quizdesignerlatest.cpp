@@ -58,37 +58,32 @@ void QuizDesignerLatest::loadQuiz() {
     
     d.fileRead(d, f);
 
+    f.close();
 
+    //ui.titleEdit->setText(QString::fromStdString(d.getTitle()));
 
-        /*QTextStream stream(&file);
-
-    int i = 0;
-    while (!stream.atEnd()) {
-        QString line = stream.readLine();
-        ui.qlistWidget->addItem(line);
-        i++;
+    for (int i = 0; i < d.getQues().size(); i++) {
+        if (!QString::fromStdString(d.getQues()[i]).isEmpty()) {
+            QListWidgetItem* item = new QListWidgetItem("Question: " + QString::fromStdString(d.getQues()[i]), ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+            item->setData(Qt::UserRole, QString::fromStdString(d.getQues()[i]));
+            ui.qlistWidget->setCurrentItem(item);
+        }
+        else { // otherwise, add empty item to list
+            QListWidgetItem* item = new QListWidgetItem(" ", ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+            item->setData(Qt::UserRole, QString::fromStdString(d.getQues()[i]));
+            ui.qlistWidget->setCurrentItem(item);
+        }
     }
 
-    file.close();*/
 }
 
 void QuizDesignerLatest::on_exportButton_clicked() {
     //d.fileWrite(d, d.getTypes(), d.getQues());
+    QString title = ui.titleEdit->text();
+    d.setTitle(title.toLocal8Bit().constData());
+    cout << "export button clicked! d.getTitle(): " << d.getTitle() << endl;
     d.fileWrite(d);
-    //QString quizName = ui.titleEdit->text();
 
-    //QFile file(quizName + ".csv");
-    //if (!file.open(QIODevice::WriteOnly)) {
-    //    qCritical() << file.errorString();
-    //}
-
-    //for (int i = 0; i < d.getNumQues(); i++) {
-    //    QTextStream stream(&file);
-    //    stream << ui.qlistWidget->item(i)->text() << Qt::endl;
-    //}
-
-    //file.flush();
-    //file.close();
 }
 
 void QuizDesignerLatest::multChoiceAnswers() {
@@ -239,17 +234,33 @@ void QuizDesignerLatest::on_questButton_clicked() {
         d.printTypes();
         d.printQues();
 
-        
-        if (!ques.isEmpty()) {
-            QListWidgetItem* item = new QListWidgetItem("Question: " + ques, ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
-            item->setData(Qt::UserRole, ques);
-            ui.qlistWidget->setCurrentItem(item);
-        }
-        else { // otherwise, add empty item to list
-            QListWidgetItem* item = new QListWidgetItem(" ", ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
-            item->setData(Qt::UserRole, ques);
-            ui.qlistWidget->setCurrentItem(item);
-        }
+       // if (d.getMsgClicked() == 0) {
+            if (!ques.isEmpty()) {
+                QListWidgetItem* item = new QListWidgetItem("Question: " + ques, ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+                item->setData(Qt::UserRole, ques);
+                ui.qlistWidget->setCurrentItem(item);
+            }
+            else { // otherwise, add empty item to list
+                QListWidgetItem* item = new QListWidgetItem(" ", ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+                item->setData(Qt::UserRole, ques);
+                ui.qlistWidget->setCurrentItem(item);
+            }
+       // }
+        //else if (d.getMsgClicked() == 1)
+        //{
+        //    for (int i = 0; i < d.getQues().size(); i++) {
+        //        if (!QString::fromStdString(d.getQues()[i]).isEmpty()) {
+        //            QListWidgetItem* item = new QListWidgetItem("Question: " + QString::fromStdString(d.getQues()[i]), ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+        //            item->setData(Qt::UserRole, QString::fromStdString(d.getQues()[i]));
+        //            ui.qlistWidget->setCurrentItem(item);
+        //        }
+        //        else { // otherwise, add empty item to list
+        //            QListWidgetItem* item = new QListWidgetItem(" ", ui.qlistWidget); // enter question number from counter here, i.e. "Question 1:"
+        //            item->setData(Qt::UserRole, QString::fromStdString(d.getQues()[i]));
+        //            ui.qlistWidget->setCurrentItem(item);
+        //        }
+        //    }
+        //}
 
     }
     
