@@ -222,6 +222,21 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 				store_temp[i - 1].pop_back();
 				d.setType(store_temp[i - 1]);
 			}
+			else if (store_temp[i - 1] == "") {
+				cout << "duplicate question type here" << endl;
+				d.setType(d.getTypes().back());
+
+				if (d.getTypes().back() == "Multiple Choice (Single Answer)") {
+					cout << "Entering duplicate loop!!!!!!!!!!!!!" << endl;
+					answers.push_back(store_temp_ans[i + 1].erase(0, 3));
+					answers.push_back(store_temp_ans[i + 2].erase(0, 3));
+					answers.push_back(store_temp_ans[i + 3].erase(0, 3));
+					answers.push_back(store_temp_ans[i + 4].erase(0, 3));
+					std::cout << "answers[0] = " << answers[0] << endl;
+					d.setMultAns(answers, 1);
+					answers.clear();
+				}
+			}
 			d.setQuestion(store_temp_copy[i].erase(0, 3));
 			store_temp_s = store_temp[i];
 			max_new = store_temp_s[0] - '0';
@@ -294,12 +309,26 @@ void DataStore::fileWrite(DataStore d) {
 				file << "False:___\n" << endl;
 			}
 			else if (types[i] == "Multiple Choice (Single Answer)") {
-				file << "a) " << d.getMultAns()[0][0] << endl;
-				file << "b) " << d.getMultAns()[0][1] << endl;
-				file << "c) " << d.getMultAns()[0][2] << endl;
-				file << "d) " << d.getMultAns()[0][3] << endl;
+				
+					file << "a) " << d.getMultAns()[idx][0] << endl;
+					file << "b) " << d.getMultAns()[idx][1] << endl;
+					file << "c) " << d.getMultAns()[idx][2] << endl;
+					file << "d) " << d.getMultAns()[idx][3] << endl;
+				
+
+			if (d.getMsgClicked()) {
+				if (d.getAnsIdx().size() > 0) {
+					
+					idx = d.getAnsIdx()[j++];
+				}
+				else {
+					idx++;
+				}
+			}
+			else if(!d.getMsgClicked()) {
 				if (idx < (d.getAnsIdx().size())) {
-					idx = d.getAnsIdx()[0];
+					idx = d.getAnsIdx()[j++];
+				}
 				}
 				
 			}
@@ -320,13 +349,27 @@ void DataStore::fileWrite(DataStore d) {
 				}
 				else if (types[i] == "Multiple Choice (Single Answer)") {
 					std::cout << "i > 0 idx: " << idx << endl;
+
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					if (idx < (d.getAnsIdx().size())) {
-						idx = d.getAnsIdx()[++j];
+					
+					if (d.getMsgClicked()) {
+						if (d.getAnsIdx().size() > 0) {
+
+							idx = d.getAnsIdx()[j++];
+						}
+						else {
+							idx++;
+						}
 					}
+					else if(!d.getMsgClicked()) {
+						if (idx < (d.getAnsIdx().size())) {
+							idx = d.getAnsIdx()[j++];
+						}
+					}
+
 				}
 				else if (types[i] == "Fill in the Blank") {
 					file << "__________________________\n";
@@ -338,16 +381,30 @@ void DataStore::fileWrite(DataStore d) {
 				file << questions[i] << endl;
 				if (types[i] == "True/False") {
 					file << "True:___" << endl;
-					file << "False:___\n" << endl;
+					file << "False:___" << endl;
 				}
 				else if (types[i] == "Multiple Choice (Single Answer)") {
+
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					if (idx < (d.getAnsIdx().size())) {
-						idx = d.getAnsIdx()[++j]; ///// failing line
+					
+					if (d.getMsgClicked()) {
+						if (d.getAnsIdx().size() > 0) {
+
+							idx = d.getAnsIdx()[j++];
+						}
+						else {
+							idx++;
+						}
 					}
+					else if(!d.getMsgClicked()) {
+						if (idx < (d.getAnsIdx().size())) {
+							idx = d.getAnsIdx()[j++];
+						}
+					}
+
 				}
 				else if (types[i] == "Fill in the Blank") {
 					file << "__________________________\n";
