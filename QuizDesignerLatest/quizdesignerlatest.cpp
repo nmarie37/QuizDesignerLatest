@@ -159,11 +159,13 @@ void QuizDesignerLatest::on_questButton_clicked() {
         }
 
         if (d.getMsgClicked()) {
-            d.setNumQues(d.getNumQues() + 1); // store current number of questions into DataStore object
+            
+            d.setNumQues(d.getNumQues()+1); // store current number of questions into DataStore object
         }
         else {
             d.setNumQues(i);
         }
+
 
         vector<string> getTypes_temp;
         vector<string> getQues_temp;
@@ -219,42 +221,28 @@ void QuizDesignerLatest::on_questButton_clicked() {
             cout << "ans_idx_temp before sort: " << endl;
             cout << ans_idx_temp[i] << endl;
         }
-
-        //if (d.getMsgClicked()) {
-        //    if (d.getAnsIdx().size() > 0) {
-        //        idx = d.getAnsIdx()[j++];
-        //    }
-        //    else {
-        //        idx++;
-        //    }
-        //}
-        //else if (!d.getMsgClicked()) {
-        //    if (idx < (d.getAnsIdx().size())) {
-        //        idx = d.getAnsIdx()[j++];
-        //    }
-        //}
-
-        if ((!d.getMsgClicked()) || (d.getMsgClicked() && (d.getAnsIdx().size() > 0))) {
-            // sort multiple choice answers based on multiple choice questions order
-            d.pairSortInt(mult_choice_ques, ans_idx_temp); ///// BADDDDD
+        // sort multiple choice answers based on multiple choice questions order
+       
+        if (mult_choice_ques.size()>1 && ans_idx_temp.size()>1) {
+            d.pairSortInt(mult_choice_ques, ans_idx_temp);
         }
+            for (int i = 0; i < ans_idx_temp.size(); i++) {
+                cout << "ans_idx_temp after sort: " << endl;
+                cout << ans_idx_temp[i] << endl;
+            }
+
+            cout << "size of mult_choice_ques: " << mult_choice_ques.size() << endl;
+            cout << "size of ans_idx_temp (should match above): " << ans_idx_temp.size() << endl;
+
+            if (d.getMsgClicked() && (d.getMultAns().size() > 0)) {
+                vector<string> blank;
+                d.setMultAns(blank, 0); // clears setMultAns
+                for (int i = 0; i < ans_idx_temp.size(); i++) {
+                    d.setMultAns(mult_choice_ans_temp[ans_idx_temp[i]], 1);
+                }
+            }
 
 
-        for (int i = 0; i < ans_idx_temp.size(); i++) {
-            cout << "ans_idx_temp after sort: " << endl;
-            cout << ans_idx_temp[i] << endl;
-        }
-
-        cout << "size of mult_choice_ques: " << mult_choice_ques.size() << endl;
-        cout << "size of ans_idx_temp (should match above): " << ans_idx_temp.size() << endl;
-
-        vector<string> blank;
-        d.setMultAns(blank, 0); // clears setMultAns
-        for (int i = 0; i < ans_idx_temp.size(); i++) {
-            d.setMultAns(mult_choice_ans_temp[ans_idx_temp[i]], 1);
-        }
-        
-        
         
 
         d.printTypes();

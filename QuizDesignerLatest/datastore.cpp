@@ -225,16 +225,14 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			else if (store_temp[i - 1] == "") {
 				cout << "duplicate question type here" << endl;
 				d.setType(d.getTypes().back());
+
 				if (d.getTypes().back() == "Multiple Choice (Single Answer)") {
+					cout << "Entering duplicate loop!!!!!!!!!!!!!" << endl;
 					answers.push_back(store_temp_ans[i + 1].erase(0, 3));
-					std::cout << "answers[0] = " << answers[0] << endl;
 					answers.push_back(store_temp_ans[i + 2].erase(0, 3));
-					std::cout << "answers[1] = " << answers[1] << endl;
 					answers.push_back(store_temp_ans[i + 3].erase(0, 3));
-					std::cout << "answers[2] = " << answers[2] << endl;
 					answers.push_back(store_temp_ans[i + 4].erase(0, 3));
-					std::cout << "answers[3] = " << answers[3] << endl;
-					
+					std::cout << "answers[0] = " << answers[0] << endl;
 					d.setMultAns(answers, 1);
 					answers.clear();
 				}
@@ -292,13 +290,10 @@ void DataStore::fileWrite(DataStore d) {
 	file << "\nName:_______________________" << endl;
 	file <<"\n";
 
-	cout << "types.size() before loop = " << types.size() << endl;
-
 	int j = 0;
 	int idx = 0;
 	int q = 0;
 	for (int i = 0; i < types.size(); i++) {
-		cout << "types.size() = " << types.size() << endl;
 		if (q < numques) {
 			q++;
 		}
@@ -315,22 +310,25 @@ void DataStore::fileWrite(DataStore d) {
 			}
 			else if (types[i] == "Multiple Choice (Single Answer)") {
 				
-				file << "a) " << d.getMultAns()[idx][0] << endl;
-				file << "b) " << d.getMultAns()[idx][1] << endl;
-				file << "c) " << d.getMultAns()[idx][2] << endl;
-				file << "d) " << d.getMultAns()[idx][3] << endl;
-				if (d.getMsgClicked()) {
-					if (d.getAnsIdx().size() > 0) {
-						idx = d.getAnsIdx()[j++];
-					}
-					else {
-						idx++;
-					}
+					file << "a) " << d.getMultAns()[idx][0] << endl;
+					file << "b) " << d.getMultAns()[idx][1] << endl;
+					file << "c) " << d.getMultAns()[idx][2] << endl;
+					file << "d) " << d.getMultAns()[idx][3] << endl;
+				
+
+			if (d.getMsgClicked()) {
+				if (d.getAnsIdx().size() > 0) {
+					
+					idx = d.getAnsIdx()[j++];
 				}
-				else if (!d.getMsgClicked()){
-					if (idx < (d.getAnsIdx().size())) {
-						idx = d.getAnsIdx()[j++];
-					}
+				else {
+					idx++;
+				}
+			}
+			else if(!d.getMsgClicked()) {
+				if (idx < (d.getAnsIdx().size())) {
+					idx = d.getAnsIdx()[j++];
+				}
 				}
 				
 			}
@@ -343,7 +341,6 @@ void DataStore::fileWrite(DataStore d) {
 		{
 			file << "\n";
 			if (types[i] == types[i - 1]) {
-				cout << " index i = " << i << ", questions[i] = " << questions[i] << endl;
 				file << q << ". ";
 				file << questions[i] << endl;
 				if (types[i] == "True/False") {
@@ -351,20 +348,23 @@ void DataStore::fileWrite(DataStore d) {
 					file << "False:___" << endl;
 				}
 				else if (types[i] == "Multiple Choice (Single Answer)") {
-					std::cout << "i > 0 idx: " << idx << endl;					
+					std::cout << "i > 0 idx: " << idx << endl;
+
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
+					
 					if (d.getMsgClicked()) {
 						if (d.getAnsIdx().size() > 0) {
+
 							idx = d.getAnsIdx()[j++];
 						}
 						else {
 							idx++;
 						}
 					}
-					else if (!d.getMsgClicked()) {
+					else if(!d.getMsgClicked()) {
 						if (idx < (d.getAnsIdx().size())) {
 							idx = d.getAnsIdx()[j++];
 						}
@@ -383,20 +383,23 @@ void DataStore::fileWrite(DataStore d) {
 					file << "True:___" << endl;
 					file << "False:___" << endl;
 				}
-				else if (types[i] == "Multiple Choice (Single Answer)") {					
+				else if (types[i] == "Multiple Choice (Single Answer)") {
+
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
+					
 					if (d.getMsgClicked()) {
 						if (d.getAnsIdx().size() > 0) {
+
 							idx = d.getAnsIdx()[j++];
 						}
 						else {
 							idx++;
 						}
 					}
-					else if (!d.getMsgClicked()) {
+					else if(!d.getMsgClicked()) {
 						if (idx < (d.getAnsIdx().size())) {
 							idx = d.getAnsIdx()[j++];
 						}
