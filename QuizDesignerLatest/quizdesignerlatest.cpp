@@ -171,41 +171,24 @@ void QuizDesignerLatest::on_questButton_clicked() {
         vector<string> getQues_temp;
         getTypes_temp = d.getTypes();
         getQues_temp = d.getQues();
-        int last_idx = d.getAnsIdx().back();
 
-        if (ans_i > 0) {
-            if (d.getMsgClicked()) {
-                    vector<int> ans_temp;
-                    ans_temp = d.getAnsIdx();
-                // keep track of answers based on index; use these indices later when sorting to identify answers properly
-                //for (int i = 0; i < ans_i; i++) {
-                    ans_temp.push_back(ans_i + last_idx); // should create vector that holds 0...number of mult choice ques - 1
-               //}
-                d.setAnsIdx(ans_temp);
-            }
-            else {
 
-            }
-            //else if (d.getMsgClicked()) {
-            //    vector<int> ans_temp;
-            //    vector<int> ans_get_temp;
-            //    // keep track of answers based on index; use these indices later when sorting to identify answers properly
-            //    for (int i = 0; i < ans_i; i++) {
-            //        ans_temp.push_back(i); // should create vector that holds 0...number of mult choice ques - 1
-            //    }
-            //    ans_get_temp = d.getAnsIdx(); // answers before what was just added by user
-            //    for (int i = 0; i < ans_temp.size(); i++) {
-            //        ans_get_temp.push_back(ans_temp[i]);
-            //    }
-            //    d.setAnsIdx(ans_get_temp);
-            //}
-            
-        }
-
-        for (int i = 0; i < d.getAnsIdx().size(); i++) {
-            cout << "getAnsIdx: " << endl;
-            cout << d.getAnsIdx()[i] << endl;
-        }
+        //vector<int> ans_temp;
+        //// keep track of answers based on index; use these indices later when sorting to identify answers properly
+        //for (int i = 0; i < ans_i; i++) {
+        //    ans_temp.push_back(i); // should create vector that holds 0...number of mult choice ques - 1
+        //}
+        //if (d.getMsgClicked()) {
+        //    d.setAnsIdx(ans_temp, 1);
+        //}
+        //else {
+        //    d.setAnsIdx(ans_temp, 0);
+        //}
+        
+        //for (int i = 0; i < d.getAnsIdx().size(); i++) {
+        //    cout << "getAnsIdx: " << endl;
+        //    cout << d.getAnsIdx()[i] << endl;
+        //}
 
         vector<string> mult_choice_ques; // vector to store only multiple choice questions BEFORE sorting
 
@@ -213,6 +196,7 @@ void QuizDesignerLatest::on_questButton_clicked() {
         for (int i = 0; i < getTypes_temp.size(); i++) {
             if (getTypes_temp[i] == "Multiple Choice (Single Answer)") {
                 mult_choice_ques.push_back(getQues_temp[i]);
+                d.setMultQues(getQues_temp[i]);
             }
             else {
                 continue;
@@ -233,21 +217,27 @@ void QuizDesignerLatest::on_questButton_clicked() {
         d.setQuestions(getQues_temp);
         d.setTypes(getTypes_temp);
 
-        
-
         vector<vector<string>> mult_choice_ans_temp = d.getMultAns();
         vector<vector<string>> mult_choice_sorted;
-        vector<int> ans_idx_temp = d.getAnsIdx();
 
-        for (int i = 0; i < ans_idx_temp.size(); i++) {
-            cout << "ans_idx_temp before sort: " << endl;
-            cout << ans_idx_temp[i] << endl;
-        }
-        // sort multiple choice answers based on multiple choice questions order
-       
-        if (mult_choice_ques.size()>1 && ans_idx_temp.size()>1) {
-            d.pairSortInt(mult_choice_ques, ans_idx_temp);
-        }
+        if (d.getMsgClicked()) { // if open was clicked
+            //vector<int> ans_idx_temp = d.getAnsIdx(1);
+            vector<int> ans_idx_temp;
+            for (i = 0; i < d.getMultAns().size(); i++) {
+                ans_idx_temp.push_back(i);
+            }
+
+            d.setAnsIdx(ans_idx_temp);
+
+            for (int i = 0; i < ans_idx_temp.size(); i++) {
+                cout << "ans_idx_temp before sort: " << endl;
+                cout << ans_idx_temp[i] << endl;
+            }
+            // sort multiple choice answers based on multiple choice questions order
+
+            if (mult_choice_ques.size() > 1 && ans_idx_temp.size() > 1) {
+                d.pairSortInt(mult_choice_ques, ans_idx_temp);
+            }
             for (int i = 0; i < ans_idx_temp.size(); i++) {
                 cout << "ans_idx_temp after sort: " << endl;
                 cout << ans_idx_temp[i] << endl;
@@ -256,7 +246,7 @@ void QuizDesignerLatest::on_questButton_clicked() {
             cout << "size of mult_choice_ques: " << mult_choice_ques.size() << endl;
             cout << "size of ans_idx_temp (should match above): " << ans_idx_temp.size() << endl;
 
-            if (d.getMsgClicked() && (d.getMultAns().size() > 0)) {
+            if (!d.getMsgClicked() && (d.getMultAns().size() > 0)) {
                 vector<string> blank;
                 d.setMultAns(blank, 0); // clears setMultAns
                 for (int i = 0; i < ans_idx_temp.size(); i++) {
@@ -264,8 +254,39 @@ void QuizDesignerLatest::on_questButton_clicked() {
                 }
             }
 
+        }
+        else {
+            vector<int> ans_temp;
+            // keep track of answers based on index; use these indices later when sorting to identify answers properly
+            for (int i = 0; i < ans_i; i++) {
+                ans_temp.push_back(i); // should create vector that holds 0...number of mult choice ques - 1
+            }
+            for (int i = 0; i < ans_temp.size(); i++) {
+                cout << "ans_idx_temp before sort: " << endl;
+                cout << ans_temp[i] << endl;
+            }
+            // sort multiple choice answers based on multiple choice questions order
 
-        
+            if (mult_choice_ques.size() > 1 && ans_temp.size() > 1) {
+                d.pairSortInt(mult_choice_ques, ans_temp);
+            }
+            for (int i = 0; i < ans_temp.size(); i++) {
+                cout << "ans_idx_temp after sort: " << endl;
+                cout << ans_temp[i] << endl;
+            }
+
+            cout << "size of mult_choice_ques: " << mult_choice_ques.size() << endl;
+            cout << "size of ans_idx_temp (should match above): " << ans_temp.size() << endl;
+
+            if (d.getMsgClicked() && (d.getMultAns().size() > 0)) {
+                vector<string> blank;
+                d.setMultAns(blank, 0); // clears setMultAns
+                for (int i = 0; i < ans_temp.size(); i++) {
+                    d.setMultAns(mult_choice_ans_temp[ans_temp[i]], 1);
+                    d.setMultAns(mult_choice_ans_temp[ans_temp[i]], 1);
+                }
+            }
+        }
 
         d.printTypes();
         d.printQues();
@@ -319,8 +340,10 @@ void QuizDesignerLatest::on_deleteButton_clicked() { // deletes the currently se
         i--;
     }
 
-    QListWidgetItem* curItem = ui.qlistWidget->currentItem();
+    //static int r = 0;
 
+    QListWidgetItem* curItem = ui.qlistWidget->currentItem();
+    
     if (curItem) {
         int row = ui.qlistWidget->row(curItem);
         ui.qlistWidget->takeItem(row);
@@ -330,10 +353,21 @@ void QuizDesignerLatest::on_deleteButton_clicked() { // deletes the currently se
         cout << "del_s = " << del_s;
         vector<string> qtemp = d.getQues();
 
-        for (static int r = 0; r < qtemp.size(); r++) {
+        for (int r = 0; r < qtemp.size(); r++) {
             if (qtemp[r] == del_s) {
                 cout << "Found ques to remove from vector!" << endl;
+                if (d.getTypes()[r] == "Multiple Choice (Single Answer)") {
+                    for (int i = 0; i < d.getAnsIdx().size(); i++) {
+                        if (d.getMultQues(i) == d.getQues()[r]) {
+                            d.removeMultAns(i);
+                        }
+                    }
+
+                }
+
                 d.removeQues(r);
+                d.removeType(r);
+                
             }
         }
 

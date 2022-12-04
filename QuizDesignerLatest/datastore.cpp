@@ -15,6 +15,9 @@ DataStore::DataStore() { // initialize int and string member variables. Vector s
 	vector<string> questions;
 	vector<string> types;
 	vector<vector<string>> mult_ans;
+	vector<string> mult_ques;
+	//vector<vector<string>> mult_ans_open_add;
+	//vector<int> ans_idx_open_add;
 	vector<int> ans_idx;
 	int msg_clicked;
 }
@@ -43,6 +46,10 @@ vector<string> DataStore::getQues() {  // get question at index i
 
 void DataStore::removeQues(int i) {
 	questions.erase(questions.begin() + i);
+}
+
+void DataStore::removeType(int i) {
+	types.erase(types.begin() + i);
 }
 
 void DataStore::setType(string type) { // push type into vector
@@ -83,12 +90,26 @@ void DataStore::setMultAns(vector<string> answers, int clear) {
 		mult_ans.push_back(answers);
 	}
 }
+
+void DataStore::setMultQues(string q) {
+	mult_ques.push_back(q);
+}
+
+string DataStore::getMultQues(int i) {
+	return mult_ques[i];
+}
+
+void DataStore::removeMultAns(int i) {
+	mult_ans.erase(mult_ans.begin() + i);
+	ans_idx.erase(ans_idx.begin() + i);
+}
+
 vector<vector<string>> DataStore::getMultAns() {
 	return mult_ans;
 }
 
 void DataStore::setAnsIdx(vector<int> ans) {
-	ans_idx = ans;
+	ans_idx = ans;	
 }
 
 vector<int> DataStore::getAnsIdx() {
@@ -161,7 +182,6 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 
 	int max_cur = 0;
 	int max_new = 0;
-	int mult_count = 0;
 	string store_temp_s;
 	vector<string> answers;
 	vector<string> store_temp_ans = store_temp;
@@ -171,7 +191,6 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 		if (i == 1) {
 			//d.setType(store_temp[i - 1]);
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
-				mult_count++;
 				store_temp[i - 1].pop_back();
 				store_temp[i - 1].pop_back();
 				d.setType(store_temp[i - 1]);
@@ -202,7 +221,6 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			//d.setType(store_temp[i - 1]);
 			cout << "store_temp[i-1] = " << store_temp[i - 1] << endl;
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
-				mult_count++;
 				//store_temp[i - 1] = "Multiple Choice (Single Answer)";
 				store_temp[i - 1].pop_back();
 				store_temp[i - 1].pop_back();
@@ -230,7 +248,6 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 				d.setType(d.getTypes().back());
 
 				if (d.getTypes().back() == "Multiple Choice (Single Answer)") {
-					mult_count++;
 					cout << "Entering duplicate loop!!!!!!!!!!!!!" << endl;
 					answers.push_back(store_temp_ans[i + 1].erase(0, 3));
 					answers.push_back(store_temp_ans[i + 2].erase(0, 3));
@@ -251,13 +268,6 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			}
 		}
 	}
-
-	vector<int> ans_temp;
-	for (int i = 0; i < mult_count; i++) {
-		ans_temp.push_back(i);
-	}
-	d.setAnsIdx(ans_temp);
-	
 
 	std::cout << "store_temp[0] = " << store_temp[0] << endl; // this should be the first question type
 	for (int i = 0; i < d.getQues().size(); i++) {
@@ -305,6 +315,7 @@ void DataStore::fileWrite(DataStore d) {
 	int idx = 0;
 	int q = 0;
 	for (int i = 0; i < types.size(); i++) {
+
 		if (q < numques) {
 			q++;
 		}
@@ -325,22 +336,35 @@ void DataStore::fileWrite(DataStore d) {
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-				
-
-			if (d.getMsgClicked()) {
-				if (d.getAnsIdx().size() > 0) {
-					
-					idx = d.getAnsIdx()[j++];
-				}
-				else {
 					idx++;
-				}
-			}
-			else if(!d.getMsgClicked()) {
-				if (idx < (d.getAnsIdx().size())) {
-					idx = d.getAnsIdx()[j++];
-				}
-				}
+					////////////////if (d.getMsgClicked()) {
+					////////////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
+					////////////////		idx++;
+					////////////////	}
+					////////////////	else {
+					////////////////		idx = d.getAnsIdx()[++j];
+					////////////////	}
+					////////////////}
+					////////////////else if (!d.getMsgClicked()) {
+					////////////////	//if (idx < (d.getAnsIdx().size())) {
+					////////////////		idx = d.getAnsIdx()[++j];
+					////////////////	//}
+					////////////////}
+
+			//if (d.getMsgClicked()) {
+			//	if (d.getAnsIdx().size() > 0) {
+
+			//		idx = d.getAnsIdx()[++j];
+			//	}
+			//	else {
+			//		idx++;
+			//	}
+			//}
+			//else if (!d.getMsgClicked()) {
+			//	if (idx < (d.getAnsIdx().size())) {
+			//		idx = d.getAnsIdx()[++j];
+			//	}
+			//}
 				
 			}
 			else if (types[i] == "Fill in the Blank") {
@@ -365,8 +389,8 @@ void DataStore::fileWrite(DataStore d) {
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					
-					if (d.getMsgClicked()) {
+					idx++;
+					/*if (d.getMsgClicked()) {
 						if (d.getAnsIdx().size() > 0) {
 
 							idx = d.getAnsIdx()[j++];
@@ -379,7 +403,20 @@ void DataStore::fileWrite(DataStore d) {
 						if (idx < (d.getAnsIdx().size())) {
 							idx = d.getAnsIdx()[j++];
 						}
-					}
+					}*/
+					////////////////if (d.getMsgClicked()) {
+					////////////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
+					////////////////		idx++;
+					////////////////	}
+					////////////////	else {
+					////////////////		idx = d.getAnsIdx()[j++];
+					////////////////	}
+					////////////////}
+					////////////////else if (!d.getMsgClicked()) {
+					////////////////	//if (idx < (d.getAnsIdx().size())) {
+					////////////////		idx = d.getAnsIdx()[j++];
+					////////////////	//}
+					////////////////}
 
 				}
 				else if (types[i] == "Fill in the Blank") {
@@ -400,8 +437,8 @@ void DataStore::fileWrite(DataStore d) {
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					
-					if (d.getMsgClicked()) {
+					idx++;
+					/*if (d.getMsgClicked()) {
 						if (d.getAnsIdx().size() > 0) {
 
 							idx = d.getAnsIdx()[j++];
@@ -414,7 +451,20 @@ void DataStore::fileWrite(DataStore d) {
 						if (idx < (d.getAnsIdx().size())) {
 							idx = d.getAnsIdx()[j++];
 						}
-					}
+					}*/
+					//////////if (d.getMsgClicked()) {
+					//////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
+					//////////		idx++;
+					//////////	}
+					//////////	else {
+					//////////		idx = d.getAnsIdx()[j++];
+					//////////	}
+					//////////}
+					//////////else if (!d.getMsgClicked()) {
+					//////////	//if (idx < (d.getAnsIdx().size())) {
+					//////////		idx = d.getAnsIdx()[j++];
+					//////////	//}
+					//////////}
 
 				}
 				else if (types[i] == "Fill in the Blank") {

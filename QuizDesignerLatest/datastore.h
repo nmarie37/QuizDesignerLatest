@@ -17,7 +17,9 @@ private:
 	vector<string> questions; // each element is a quiz question
 	vector<string> types; // each type matches up with its corresponding quiz in questions vector
 	vector<vector<string>> mult_ans;
+	vector<string> mult_ques;
 	vector<int> ans_idx;
+	//vector<int> ans_idx_open_add;
 	int msg_clicked;
 
 public:
@@ -27,6 +29,7 @@ public:
 	void setQuestions(vector<string> quests); // set question
 	vector<string> getQues(); // get question at index i
 	void removeQues(int i);
+	void removeType(int i);
 	void setType(string quest); // set question type for specified question
 	void setTypes(vector<string> type);
 	vector<string> getTypes(); // get question type for question at index i
@@ -34,6 +37,9 @@ public:
 	void setNumQues(int n);
 
 	void setMultAns(vector<string> answers, int clear);
+	void setMultQues(string q);
+	string getMultQues(int i);
+	void removeMultAns(int i);
 	vector<vector<string>> getMultAns();
 	void setAnsIdx(vector<int> ans);
 	vector<int> getAnsIdx();
