@@ -171,14 +171,36 @@ void QuizDesignerLatest::on_questButton_clicked() {
         vector<string> getQues_temp;
         getTypes_temp = d.getTypes();
         getQues_temp = d.getQues();
+        int last_idx = d.getAnsIdx().back();
 
+        if (ans_i > 0) {
+            if (d.getMsgClicked()) {
+                    vector<int> ans_temp;
+                    ans_temp = d.getAnsIdx();
+                // keep track of answers based on index; use these indices later when sorting to identify answers properly
+                //for (int i = 0; i < ans_i; i++) {
+                    ans_temp.push_back(ans_i + last_idx); // should create vector that holds 0...number of mult choice ques - 1
+               //}
+                d.setAnsIdx(ans_temp);
+            }
+            else {
 
-        vector<int> ans_temp;
-        // keep track of answers based on index; use these indices later when sorting to identify answers properly
-        for (int i = 0; i < ans_i; i++) {
-            ans_temp.push_back(i); // should create vector that holds 0...number of mult choice ques - 1
+            }
+            //else if (d.getMsgClicked()) {
+            //    vector<int> ans_temp;
+            //    vector<int> ans_get_temp;
+            //    // keep track of answers based on index; use these indices later when sorting to identify answers properly
+            //    for (int i = 0; i < ans_i; i++) {
+            //        ans_temp.push_back(i); // should create vector that holds 0...number of mult choice ques - 1
+            //    }
+            //    ans_get_temp = d.getAnsIdx(); // answers before what was just added by user
+            //    for (int i = 0; i < ans_temp.size(); i++) {
+            //        ans_get_temp.push_back(ans_temp[i]);
+            //    }
+            //    d.setAnsIdx(ans_get_temp);
+            //}
+            
         }
-        d.setAnsIdx(ans_temp);
 
         for (int i = 0; i < d.getAnsIdx().size(); i++) {
             cout << "getAnsIdx: " << endl;

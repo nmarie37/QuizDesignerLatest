@@ -161,6 +161,7 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 
 	int max_cur = 0;
 	int max_new = 0;
+	int mult_count = 0;
 	string store_temp_s;
 	vector<string> answers;
 	vector<string> store_temp_ans = store_temp;
@@ -170,6 +171,7 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 		if (i == 1) {
 			//d.setType(store_temp[i - 1]);
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
+				mult_count++;
 				store_temp[i - 1].pop_back();
 				store_temp[i - 1].pop_back();
 				d.setType(store_temp[i - 1]);
@@ -200,6 +202,7 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			//d.setType(store_temp[i - 1]);
 			cout << "store_temp[i-1] = " << store_temp[i - 1] << endl;
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
+				mult_count++;
 				//store_temp[i - 1] = "Multiple Choice (Single Answer)";
 				store_temp[i - 1].pop_back();
 				store_temp[i - 1].pop_back();
@@ -227,6 +230,7 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 				d.setType(d.getTypes().back());
 
 				if (d.getTypes().back() == "Multiple Choice (Single Answer)") {
+					mult_count++;
 					cout << "Entering duplicate loop!!!!!!!!!!!!!" << endl;
 					answers.push_back(store_temp_ans[i + 1].erase(0, 3));
 					answers.push_back(store_temp_ans[i + 2].erase(0, 3));
@@ -247,6 +251,13 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			}
 		}
 	}
+
+	vector<int> ans_temp;
+	for (int i = 0; i < mult_count; i++) {
+		ans_temp.push_back(i);
+	}
+	d.setAnsIdx(ans_temp);
+	
 
 	std::cout << "store_temp[0] = " << store_temp[0] << endl; // this should be the first question type
 	for (int i = 0; i < d.getQues().size(); i++) {
