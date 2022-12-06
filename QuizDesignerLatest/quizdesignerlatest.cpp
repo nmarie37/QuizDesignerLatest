@@ -185,11 +185,13 @@ void QuizDesignerLatest::on_exportButton_clicked() { // function for when user c
 
     d.fileWrite(d); // write quiz to .csv file
 
-    QMessageBox msgBox;  // creat message box to pop-up
-    msgBox.setWindowTitle("File Export");
-    msgBox.setText(title + " Exported Successfully!");  // set message box title
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Close);
-    msgBox.exec();
+    if (!ui.titleEdit->text().isEmpty()) { // only pop-up when there is a title
+        QMessageBox msgBox;  // creat message box to pop-up
+        msgBox.setWindowTitle("File Export");
+        msgBox.setText(title + " Exported Successfully!    ");  // set message box title
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Close);
+        msgBox.exec();
+    } 
 }
 
 
