@@ -4,31 +4,26 @@
 #include <string>
 #include <iostream>
 
-
-
 using namespace std;
 
-
 DataStore::DataStore() { // initialize int and string member variables. Vector size will change dynamically as more questions are added by user
-	int numques = 0;
-	string title = "";
-	vector<string> questions;
-	vector<string> types;
-	vector<vector<string>> mult_ans;
-	vector<string> mult_ques;
-	//vector<vector<string>> mult_ans_open_add;
-	//vector<int> ans_idx_open_add;
-	vector<int> ans_idx;
-	int msg_clicked;
+	int numques = 0; // number of questions in the quiz (1-15)
+	string title = ""; // quiz title
+	vector<string> questions; // each element is a quiz question
+	vector<string> types; // each type matches up with its corresponding quiz in questions vector
+	vector<vector<string>> mult_ans; // each multiple choice answer matches up with it's corresponding multiple choice question
+	vector<string> mult_ques; // multiple choice questions
+	vector<int> ans_idx; // multiple choice answer indices
+	int msg_clicked; // flag for if New or Open quiz is clicked
 }
 
 DataStore::~DataStore() {}
 
-string DataStore::getTitle() {
+string DataStore::getTitle() { // get quiz title
 	return title;
 }
 
-void DataStore::setTitle(string title_s) {
+void DataStore::setTitle(string title_s) { // set quiz title
 	title = title_s;
 }
 
@@ -36,7 +31,7 @@ void DataStore::setQuestion(string quest) { // push question into vector
 	questions.push_back(quest);
 }
 
-void DataStore::setQuestions(vector<string> quests) {
+void DataStore::setQuestions(vector<string> quests) { // set questions
 	questions = quests;
 }
 
@@ -44,11 +39,11 @@ vector<string> DataStore::getQues() {  // get question at index i
 	return questions;
 }
 
-void DataStore::removeQues(int i) {
+void DataStore::removeQues(int i) { // remove question i
 	questions.erase(questions.begin() + i);
 }
 
-void DataStore::removeType(int i) {
+void DataStore::removeType(int i) { // remove type i
 	types.erase(types.begin() + i);
 }
 
@@ -56,7 +51,7 @@ void DataStore::setType(string type) { // push type into vector
 	types.push_back(type);
 }
 
-void DataStore::setTypes(vector<string> type) {
+void DataStore::setTypes(vector<string> type) { // set types
 	types = type;
 }
 
@@ -75,14 +70,14 @@ void DataStore::printQues() { // loop through all questions and print
 	}
 }
 
-int DataStore::getNumQues() {
+int DataStore::getNumQues() { // get number of questions
 	return numques;
 }
-void DataStore::setNumQues(int n) {
+void DataStore::setNumQues(int n) { // set number of questions
 	numques = n;
 }
 
-void DataStore::setMultAns(vector<string> answers, int clear) {
+void DataStore::setMultAns(vector<string> answers, int clear) { // set or clear multiple choice answers
 	if (clear == 0) {
 		mult_ans.clear();
 	}
@@ -91,39 +86,40 @@ void DataStore::setMultAns(vector<string> answers, int clear) {
 	}
 }
 
-void DataStore::setMultQues(string q) {
+void DataStore::setMultQues(string q) { // set multiple choice question
 	mult_ques.push_back(q);
 }
 
-string DataStore::getMultQues(int i) {
+string DataStore::getMultQues(int i) { // get multiple choice questoin
 	return mult_ques[i];
 }
 
-void DataStore::removeMultAns(int i) {
+void DataStore::removeMultAns(int i) { // remove multiple choice answer
 	mult_ans.erase(mult_ans.begin() + i);
 	ans_idx.erase(ans_idx.begin() + i);
+	mult_ques.erase(mult_ques.begin() + i);
 }
 
-vector<vector<string>> DataStore::getMultAns() {
+vector<vector<string>> DataStore::getMultAns() { // get multiple choice answers
 	return mult_ans;
 }
 
-void DataStore::setAnsIdx(vector<int> ans) {
-	ans_idx = ans;	
+void DataStore::setAnsIdx(vector<int> ans) { // set multiple choice answer index
+	ans_idx = ans;
 }
 
-vector<int> DataStore::getAnsIdx() {
+vector<int> DataStore::getAnsIdx() { // get muiltiple choice answer indices
 	return ans_idx;
 }
 
-void DataStore::setMsgClicked(int i) {
+void DataStore::setMsgClicked(int i) { // set flag for new or open quiz clicked in main()
 	msg_clicked = i;
 }
-int DataStore::getMsgClicked() {
+int DataStore::getMsgClicked() { // get flag for new or open quiz clicked
 	return msg_clicked;
 }
 
-void DataStore::pairSort(vector<string>& q, vector<string>& t) {
+void DataStore::pairSort(vector<string>& q, vector<string>& t) { // sort pair of string vectors based on q
 	pair<string, string> pairs[MAXQUES];
 
 	for (int i = 0; i < q.size(); i++) {
@@ -139,7 +135,8 @@ void DataStore::pairSort(vector<string>& q, vector<string>& t) {
 	}
 }
 
-void DataStore::pairSortInt(vector<string>& q, vector<int>& t) {
+void DataStore::pairSortInt(vector<string>& q, vector<int>& t) { // sort pair of string and int vectors based on q
+
 	pair<string, int> pairs[MAXQUES];
 
 	for (int i = 0; i < q.size(); i++) {
@@ -155,18 +152,16 @@ void DataStore::pairSortInt(vector<string>& q, vector<int>& t) {
 	}
 }
 
-void DataStore::fileRead(DataStore& d, ifstream& f) {
-	string lineBuf;
-	string title;
-	string course;
-	int i = 0;
-	vector<string> store_temp;
+void DataStore::fileRead(DataStore& d, ifstream& f) { // read quiz from file
+	string lineBuf; // line buffer to read file line by line
+	string title; // string to hold quiz title
+	vector<string> store_temp; // temporarily store line
 	while (f) {
 		getline(f, title);
-		d.setTitle(title);
+		d.setTitle(title); // store title into DataStore
 		getline(f, lineBuf);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++) { // skip these lines as we do not need to store them
 			getline(f, lineBuf);
 		}
 
@@ -176,28 +171,27 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 		}
 	}
 
-	for (int i = 0; i < store_temp.size(); i++) {
-		std::cout << store_temp[i] << endl;
-	}
-
-	int max_cur = 0;
+	int max_cur = 0; // keep track of current max number of questions so we can label question numbers properly
 	int max_new = 0;
+	// temporary variables so as to not corrupt the actual data while parsing
 	string store_temp_s;
 	vector<string> answers;
 	vector<string> store_temp_ans = store_temp;
 	vector<string> store_temp_copy = store_temp;
+	vector<string> store_temp_mult = store_temp;
+	// parse the data
 	for (int i = 0; i < store_temp.size(); i++) {
-		std::cout << "max_cur: " << max_cur << endl;
+		// first question
 		if (i == 1) {
-			//d.setType(store_temp[i - 1]);
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
-				store_temp[i - 1].pop_back();
+				store_temp[i - 1].pop_back(); // remove the ": " at the end
 				store_temp[i - 1].pop_back();
 				d.setType(store_temp[i - 1]);
-				answers.push_back(store_temp_ans[i + 1].erase(0,3));
+				answers.push_back(store_temp_ans[i + 1].erase(0,3)); // store answers without the "a) ", "b) " prefix, etc.
 				answers.push_back(store_temp_ans[i + 2].erase(0,3));
 				answers.push_back(store_temp_ans[i + 3].erase(0,3));
 				answers.push_back(store_temp_ans[i + 4].erase(0,3));
+				d.setMultQues(store_temp_mult[i].erase(0,3));
 				d.setMultAns(answers, 1);
 				answers.clear();
 			}
@@ -214,14 +208,11 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			d.setQuestion(store_temp_copy[i].erase(0, 3));
 			store_temp_s = store_temp[i];
 			max_cur = store_temp_s[0] - '0';
-			std::cout << "inside if (i == 1)" << endl;
 			continue;
 		}
+		// we know we are at a question if the prefix is a number folowed by a period
 		else if (isdigit(store_temp[i][0])) {
-			//d.setType(store_temp[i - 1]);
-			cout << "store_temp[i-1] = " << store_temp[i - 1] << endl;
 			if (store_temp[i - 1] == "Multiple Choice (Single Answer): ") {
-				//store_temp[i - 1] = "Multiple Choice (Single Answer)";
 				store_temp[i - 1].pop_back();
 				store_temp[i - 1].pop_back();
 				d.setType(store_temp[i - 1]);
@@ -229,7 +220,7 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 				answers.push_back(store_temp_ans[i + 2].erase(0,3));
 				answers.push_back(store_temp_ans[i + 3].erase(0,3));
 				answers.push_back(store_temp_ans[i + 4].erase(0,3));
-				std::cout << "answers[0] = " << answers[0] << endl;
+				d.setMultQues(store_temp_mult[i].erase(0, 3));
 				d.setMultAns(answers, 1);
 				answers.clear();
 			}
@@ -244,16 +235,14 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 				d.setType(store_temp[i - 1]);
 			}
 			else if (store_temp[i - 1] == "") {
-				cout << "duplicate question type here" << endl;
 				d.setType(d.getTypes().back());
 
 				if (d.getTypes().back() == "Multiple Choice (Single Answer)") {
-					cout << "Entering duplicate loop!!!!!!!!!!!!!" << endl;
 					answers.push_back(store_temp_ans[i + 1].erase(0, 3));
 					answers.push_back(store_temp_ans[i + 2].erase(0, 3));
 					answers.push_back(store_temp_ans[i + 3].erase(0, 3));
 					answers.push_back(store_temp_ans[i + 4].erase(0, 3));
-					std::cout << "answers[0] = " << answers[0] << endl;
+					d.setMultQues(store_temp_mult[i].erase(0, 3));;
 					d.setMultAns(answers, 1);
 					answers.clear();
 				}
@@ -261,66 +250,51 @@ void DataStore::fileRead(DataStore& d, ifstream& f) {
 			d.setQuestion(store_temp_copy[i].erase(0, 3));
 			store_temp_s = store_temp[i];
 			max_new = store_temp_s[0] - '0';
-			std::cout << "inside else if " << endl;
 			if (max_new > max_cur) {
 				max_cur = max_new;
-				std::cout << "inside else if if" << endl;
 			}
 		}
 	}
 
-	std::cout << "store_temp[0] = " << store_temp[0] << endl; // this should be the first question type
-	for (int i = 0; i < d.getQues().size(); i++) {
-		std::cout << "Question " << i << ": " << d.getQues()[i] << endl;
-	}
-	
-	std::cout << "store_temp_copy: " << endl;
-	for (int i = 0; i < store_temp_copy.size(); i++) {
-		std::cout<<store_temp_copy[i] << endl;
-	}
-
-	std::cout << "Mult choice answers: " << endl;
+	vector<int> setans_temp; // store multiple choice answers to temporarily sort if user clicked open
 	for (int i = 0; i < d.getMultAns().size(); i++) {
-		for (int j = 0; j < 4; j++) {
-			std::cout << d.getMultAns()[i][j] << endl;
-		}
-		
+		setans_temp.push_back(i);		
 	}
 
+	vector<string> multques_temp; // store multiple choice questions to temporarily sort if user clicked open
+	for (int i = 0; i < setans_temp.size(); i++) {
+		multques_temp.push_back(d.getMultQues(i));
+	}
+		if (multques_temp.size() > 1 && setans_temp.size() > 1) {
+			d.pairSortInt(multques_temp, setans_temp);
+		}
+
+	// store these values to DataStore
+	d.setAnsIdx(setans_temp);	
 	d.setNumQues(max_cur);
 	d.setTitle(title);
 }
 
-//void DataStore::fileWrite(DataStore d, vector<string> types, vector<string> quest) {
-void DataStore::fileWrite(DataStore d) {
-	//std::filesystem::path cwd = std::filesystem::current_path() / "filename.txt";
-	//string filename = d.getTitle() + "_" + d.getTime() + ".csv";
-	std::cout << "contents of d.getMultAns(): " << endl;
-	for (int i = 0; i < d.getMultAns().size(); i++) {
-		for (int j = 0; j < d.getMultAns()[i].size(); j++) {
-			std::cout << d.getMultAns()[i][j] << endl;
-		}
-	}
-	string filename = d.getTitle() + ".csv";
-	ofstream file(filename);
-	//cout << "cwd: " << cwd.string() << endl;
-	std::cout << "Writing to file..." << endl;
-	std::cout << "std::cout d.getTitle(): " << d.getTitle() << endl;
+
+void DataStore::fileWrite(DataStore d) { // write quiz to file
+	string filename = d.getTitle() + ".csv"; // grab title from DataStore
+	ofstream file(filename); // use title to create filename: <title.csv>
+
+	// write to file
 	file << d.getTitle() << endl;
 	file << "\nCourse:______________________" << endl;
 	file << "\nName:_______________________" << endl;
 	file <<"\n";
 
-	int j = 0;
-	int idx = 0;
-	int q = 0;
+	int q = 0; // keep track of number of questions
+	int* idx_ptr = &(ans_idx[0]); // pointer to first element in multiple choice answer indices
+	int idx = *(idx_ptr); // dereference pointer
 	for (int i = 0; i < types.size(); i++) {
-
 		if (q < numques) {
-			q++;
+			q++; // increment number of questions as we go until max configured is reached
 		}
-		if (i == 0)
-		{
+		// first question
+		if (i == 0) {		
 			file << "\n";
 			file << types[i] << ": " << endl;
 			file << q << ". ";
@@ -331,50 +305,21 @@ void DataStore::fileWrite(DataStore d) {
 				file << "False:___\n" << endl;
 			}
 			else if (types[i] == "Multiple Choice (Single Answer)") {
-				
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					idx++;
-					////////////////if (d.getMsgClicked()) {
-					////////////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
-					////////////////		idx++;
-					////////////////	}
-					////////////////	else {
-					////////////////		idx = d.getAnsIdx()[++j];
-					////////////////	}
-					////////////////}
-					////////////////else if (!d.getMsgClicked()) {
-					////////////////	//if (idx < (d.getAnsIdx().size())) {
-					////////////////		idx = d.getAnsIdx()[++j];
-					////////////////	//}
-					////////////////}
 
-			//if (d.getMsgClicked()) {
-			//	if (d.getAnsIdx().size() > 0) {
-
-			//		idx = d.getAnsIdx()[++j];
-			//	}
-			//	else {
-			//		idx++;
-			//	}
-			//}
-			//else if (!d.getMsgClicked()) {
-			//	if (idx < (d.getAnsIdx().size())) {
-			//		idx = d.getAnsIdx()[++j];
-			//	}
-			//}
-				
+					idx = *(++idx_ptr); // increment multiple choice answer index
 			}
 			else if (types[i] == "Fill in the Blank") {
 				file << "__________________________\n";
 			}
-
 		}
-		else if (i > 0)
-		{
+		// after first question
+		else if (i > 0) {
 			file << "\n";
+			// if type of current question is the same as previous question
 			if (types[i] == types[i - 1]) {
 				file << q << ". ";
 				file << questions[i] << endl;
@@ -383,46 +328,18 @@ void DataStore::fileWrite(DataStore d) {
 					file << "False:___" << endl;
 				}
 				else if (types[i] == "Multiple Choice (Single Answer)") {
-					std::cout << "i > 0 idx: " << idx << endl;
-
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					idx++;
-					/*if (d.getMsgClicked()) {
-						if (d.getAnsIdx().size() > 0) {
 
-							idx = d.getAnsIdx()[j++];
-						}
-						else {
-							idx++;
-						}
-					}
-					else if(!d.getMsgClicked()) {
-						if (idx < (d.getAnsIdx().size())) {
-							idx = d.getAnsIdx()[j++];
-						}
-					}*/
-					////////////////if (d.getMsgClicked()) {
-					////////////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
-					////////////////		idx++;
-					////////////////	}
-					////////////////	else {
-					////////////////		idx = d.getAnsIdx()[j++];
-					////////////////	}
-					////////////////}
-					////////////////else if (!d.getMsgClicked()) {
-					////////////////	//if (idx < (d.getAnsIdx().size())) {
-					////////////////		idx = d.getAnsIdx()[j++];
-					////////////////	//}
-					////////////////}
-
+					idx = *(++idx_ptr); // increment multiple choice answer index
 				}
 				else if (types[i] == "Fill in the Blank") {
 					file << "__________________________\n";
 				}
 			}
+			// if this is a different type from previous question
 			else {
 				file << types[i] << ": " << endl;
 				file << q << ". ";
@@ -432,40 +349,12 @@ void DataStore::fileWrite(DataStore d) {
 					file << "False:___" << endl;
 				}
 				else if (types[i] == "Multiple Choice (Single Answer)") {
-
 					file << "a) " << d.getMultAns()[idx][0] << endl;
 					file << "b) " << d.getMultAns()[idx][1] << endl;
 					file << "c) " << d.getMultAns()[idx][2] << endl;
 					file << "d) " << d.getMultAns()[idx][3] << endl;
-					idx++;
-					/*if (d.getMsgClicked()) {
-						if (d.getAnsIdx().size() > 0) {
 
-							idx = d.getAnsIdx()[j++];
-						}
-						else {
-							idx++;
-						}
-					}
-					else if(!d.getMsgClicked()) {
-						if (idx < (d.getAnsIdx().size())) {
-							idx = d.getAnsIdx()[j++];
-						}
-					}*/
-					//////////if (d.getMsgClicked()) {
-					//////////	if (d.getAnsIdx().size() < d.getMultAns().size()) {
-					//////////		idx++;
-					//////////	}
-					//////////	else {
-					//////////		idx = d.getAnsIdx()[j++];
-					//////////	}
-					//////////}
-					//////////else if (!d.getMsgClicked()) {
-					//////////	//if (idx < (d.getAnsIdx().size())) {
-					//////////		idx = d.getAnsIdx()[j++];
-					//////////	//}
-					//////////}
-
+					idx = *(++idx_ptr); // increment multiple choice answer index
 				}
 				else if (types[i] == "Fill in the Blank") {
 					file << "__________________________\n";
@@ -474,6 +363,5 @@ void DataStore::fileWrite(DataStore d) {
 		}
 		
 	}
-	file.close();
-	std::cout << "File closed!" << endl;
+	file.close(); // close the file
 }

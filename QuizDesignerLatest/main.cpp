@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-extern DataStore d;
+extern DataStore d; // make object we used in quizdesignerlatest.cpp available here
 
 int main(int argc, char *argv[])
 {
