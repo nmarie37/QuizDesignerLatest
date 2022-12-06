@@ -33,6 +33,10 @@ void QuizDesignerLatest::loadQuiz() { // function for when user clicked Open
     dialog.setFileMode(QFileDialog::ExistingFile); // opens Windows file explorer
     QString filename = dialog.getOpenFileName(this, "Select a File"); 
     string filename_s = filename.toLocal8Bit().constData(); // convert from QString to string for handling
+    QFileInfo fileTitle(filename);
+    QString base = fileTitle.baseName();
+    ui.titleLabel_2->setStyleSheet("font: bold");
+    ui.titleLabel_2->setText("Title: " + base);
 
     QFile file(filename); 
     ifstream f;
@@ -156,7 +160,7 @@ void QuizDesignerLatest::on_exportButton_clicked() { // function for when user c
 
     QMessageBox msgBox;  // creat message box to pop-up
     msgBox.setWindowTitle("File Export");
-    msgBox.setText("Quiz Exported Successfully!    ");  // set message box title
+    msgBox.setText(title + " Exported Successfully!");  // set message box title
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Close);
     msgBox.exec();
 }
@@ -183,6 +187,14 @@ void QuizDesignerLatest::on_questButton_clicked() { // function for adding a que
 
     QString title = ui.titleEdit->text();
     d.setTitle(title.toLocal8Bit().constData()); // grab user-configured title and store in DataStore object
+    if (ui.titleEdit->text().isEmpty()) {
+        ui.titleLabel_2->setStyleSheet("color: red;" "font: bold");
+        ui.titleLabel_2->setText("<No Title>");
+    }
+    else {
+        ui.titleLabel_2->setStyleSheet("font: bold");
+        ui.titleLabel_2->setText("Title: " + title);
+    }
 
     if (dialog.exec()) {
         // Radio button handling (i.e true/false, mult choice, fill blank)
