@@ -216,7 +216,7 @@ void QuizDesignerLatest::on_questButton_clicked() { // function for adding a que
         }
 
         QString ques = dialog.quesLineEdit->text(); // grabs question entered into dialog box
-        d.setQuestion(ques.toLocal8Bit().constData()); // stpre question as string into DataStore object
+        d.setQuestion(ques.toLocal8Bit().constData()); // store question as string into DataStore object
 
         bool en = dialog.saveButton->isEnabled(); // en = 1 when save button is clicked, 0 otherwise
 

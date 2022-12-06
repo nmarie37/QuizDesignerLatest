@@ -287,6 +287,9 @@ void DataStore::fileWrite(DataStore d) { // write quiz to file
 	file <<"\n";
 
 	int q = 0; // keep track of number of questions
+	if (ans_idx.empty()) {
+		ans_idx.push_back(0);
+	}
 	int* idx_ptr = &(ans_idx[0]); // pointer to first element in multiple choice answer indices
 	int idx = *(idx_ptr); // dereference pointer
 	for (int i = 0; i < types.size(); i++) {
@@ -302,7 +305,7 @@ void DataStore::fileWrite(DataStore d) { // write quiz to file
 			
 			if (types[i] == "True/False") {
 				file << "True:___" << endl;
-				file << "False:___\n" << endl;
+				file << "False:___" << endl;
 			}
 			else if (types[i] == "Multiple Choice (Single Answer)") {
 					file << "a) " << d.getMultAns()[idx][0] << endl;
