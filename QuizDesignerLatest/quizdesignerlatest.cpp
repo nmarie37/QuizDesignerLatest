@@ -36,7 +36,7 @@ void QuizDesignerLatest::loadQuiz() { // function for when user clicked Open
     QFileInfo fileTitle(filename);
     QString base = fileTitle.baseName();
     ui.titleLabel_2->setStyleSheet("font: bold");
-    ui.titleLabel_2->setText("Title: " + base);
+    ui.titleLabel_2->setText("Loaded Title: " + base);
 
     QFile file(filename); 
     ifstream f;
@@ -128,6 +128,13 @@ void QuizDesignerLatest::on_exportButton_clicked() { // function for when user c
             }
         }
 
+
+        //QMessageBox fileOverwriteMsgBox;  // creat message box to pop-up
+        //fileOverwriteMsgBox.setWindowTitle("File Export");
+        //fileOverwriteMsgBox.setText(title + " Exported Successfully!");  // set message box title
+        //fileOverwriteMsgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Close);
+        //fileOverwriteMsgBox.exec();
+
     }
     else { // if new was clicked in main()
         vector<int> ans_temp; // temp multiple choice answer vector
@@ -152,6 +159,26 @@ void QuizDesignerLatest::on_exportButton_clicked() { // function for when user c
 
         d.setAnsIdx(ans_temp); // store multiple choice answer indices sorted according to question
     }
+    
+    //MsgBox displaying saving file without title
+    if (ui.titleEdit->text().isEmpty() && d.getNumQues()>0) {
+        QMessageBox msgWarning;
+        msgWarning.setText("WARNING!\nNo title entered. Exporting quiz with no name (.csv).");
+        msgWarning.setIcon(QMessageBox::Warning);
+        msgWarning.setWindowTitle("Caution");
+        msgWarning.exec();
+    }
+
+    //MsgBox displaying cannot export blank quiz, quit App
+    else if (ui.titleEdit->text().isEmpty() && d.getNumQues() == 0) {
+        QMessageBox msgError;
+        msgError.setText("DANGER!\nCannot export BLANK quiz.");
+        msgError.setIcon(QMessageBox::Critical);
+        msgError.setWindowTitle("Critical");
+        msgError.exec();
+        qApp->quit();
+    }
+
 
     //d.printTypes(); // testing prints
     //d.printQues();
@@ -189,12 +216,15 @@ void QuizDesignerLatest::on_questButton_clicked() { // function for adding a que
     d.setTitle(title.toLocal8Bit().constData()); // grab user-configured title and store in DataStore object
     if (ui.titleEdit->text().isEmpty()) {
         ui.titleLabel_2->setStyleSheet("color: red;" "font: bold");
-        ui.titleLabel_2->setText("<No Title>");
+            ui.titleLabel_2->setText("<No Title>");
     }
     else {
-        ui.titleLabel_2->setStyleSheet("font: bold");
-        ui.titleLabel_2->setText("Title: " + title);
+            ui.titleLabel_2->setStyleSheet("font: bold");
+            ui.titleLabel_2->setText("Title: " + title);
     }
+
+    
+
 
     if (dialog.exec()) {
         // Radio button handling (i.e true/false, mult choice, fill blank)
